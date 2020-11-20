@@ -1,0 +1,61 @@
+NOTICES FOR THIRD-PARTY CODE/DEPENDENCIES
+
+Name: Python (Python Software Foundation).
+URL: https://www.python.org
+License: https://docs.python.org/3/license.html
+
+Name: PIP (Python Packaging Authority (PyPA)).
+URL: https://pip.pypa.io/en/stable/
+License: MIT License (MIT)
+
+Name: ansible (Radically simple IT automation)
+URL: https://pypi.org/project/ansible/
+License: GNU General Public License v3 or later (GPLv3+) (GPLv3+)
+
+Name: ansible-lint (Checks playbooks for practices and behaviour that could potentially be improved)
+URL: https://pypi.org/project/ansible-lint/
+License: MIT License (MIT)
+
+Name: pylint (python code static checker)
+URL: https://pypi.org/project/pylint/
+License: GNU General Public License (GPL) (GPL)
+
+Name: ncclient (Python library for NETCONF clients)
+URL: https://pypi.org/project/ncclient/
+License: Apache 2.0
+
+Name: python-openstackclient (OpenStack Command-line Client)
+URL: https://pypi.org/project/python-openstackclient/
+License: Apache Software License
+
+Name: junos-eznc (Junos 'EZ' automation for non-programmers)
+URL: https://pypi.org/project/junos-eznc/
+License: Apache Software License (Apache 2.0)
+
+Name: PyYAML (YAML parser and emitter for Python)
+URL: https://pypi.org/project/PyYAML/
+License: MIT License (MIT)
+
+Name: python-jenkins (Python bindings for the remote Jenkins API)
+URL: https://pypi.org/project/python-jenkins/
+License: BSD License (BSD)
+
+Name: shade (Simple client library for interacting with OpenStack clouds)
+URL: https://pypi.org/project/shade/
+License: Apache Software License
+
+Name: python-novaclient (python-novaclient)
+URL: https://pypi.org/project/python-novaclient/
+License: Apache Software License (Apache License, Version 2.0)
+
+Name: Jinja2 (A very fast and expressive template engine.)
+URL: https://pypi.org/project/Jinja2/
+License: BSD License (BSD-3-Clause)
+
+Name: jenkinsapi (A Python API for accessing resources on a Jenkins continuous-integration server.)
+URL: https://pypi.org/project/jenkinsapi/
+License: MIT License (MIT)
+
+Name: jenkins Docker Image
+URL: https://hub.docker.com/r/jenkins/jenkins
+License: https://github.com/jenkinsci/docker/blob/master/LICENSE.txt

@@ -1,0 +1,39 @@
+# ********************************************************
+#
+# Project: nita-jenkins
+# Version: 20.10
+#
+# Copyright (c) Juniper Networks, Inc., 2020. All rights reserved.
+#
+# Notice and Disclaimer: This code is licensed to you under the Apache 2.0 License (the "License"). You may not use this code except in compliance with the License. This code is not an official Juniper product. You can obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0.html
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Third-Party Code: This code may depend on other components under separate copyright notice and license terms. Your use of the source code for those components is subject to the terms and conditions of the respective license as noted in the Third-Party source code file.
+#
+# ********************************************************
+version: "2.0"
+services:
+  jenkins:
+    image: ps-docker.artifactory.aslab.juniper.net/jenkins:_nita_release_20.10-1
+    user: jenkins
+    ports:
+      - "8443:8443"
+    volumes:
+      - "/usr/bin/docker:/usr/bin/docker:ro"
+      - "/etc/nita-jenkins/certificates/jenkins_keystore.jks:/var/jenkins_home/jenkins_keystore.jks"
+      - "/var/nita_project:/project:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "jenkins_home:/var/jenkins_home"
+    environment:
+      - JENKINS_OPTS=--httpPort=8080 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=nita123
+      - JENKINS_USER
+      - JENKINS_PASS
+    networks:
+      - nita-network
+    restart: always
+volumes:
+  jenkins_home:
+networks:
+  nita-network:
+    external: true

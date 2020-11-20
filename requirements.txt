@@ -1,0 +1,12 @@
+ansible
+ansible-lint
+pylint
+ncclient
+python-openstackclient
+junos-eznc
+PyYAML
+python-jenkins
+shade
+python-novaclient
+Jinja2
+jenkinsapi
