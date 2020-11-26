@@ -74,7 +74,7 @@ mkdir -p ${IMAGEDIR}
     cd ..
     ./build_container.sh
 )
-docker save ps-docker.artifactory.aslab.juniper.net/jenkins:${VERSION}-${RELEASE} | gzip > ${IMAGEDIR}/jenkins.tar.gz
+docker save juniper/nita-jenkins:${VERSION}-${RELEASE} | gzip > ${IMAGEDIR}/nita-jenkins.tar.gz
 
 # Create a tarball of with source
 (

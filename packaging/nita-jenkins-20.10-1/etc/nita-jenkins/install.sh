@@ -70,7 +70,7 @@ else
 fi
 
 # load docker images
-add_image $IMAGES_DIR/jenkins.tar.gz ps-docker.artifactory.aslab.juniper.net/jenkins:${VERSION}
+add_image $IMAGES_DIR/nita-jenkins.tar.gz juniper/nita-jenkins:${VERSION}
 
 # create nita docker network
 if [[ `docker network ls -f 'name=nita-network' -q` == '' ]]

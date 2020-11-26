@@ -15,4 +15,4 @@
 #
 # ********************************************************
 
-docker build -t ps-docker.artifactory.aslab.juniper.net/jenkins:20.10-1 .
+docker build -t juniper/nita-jenkins:20.10-1 .

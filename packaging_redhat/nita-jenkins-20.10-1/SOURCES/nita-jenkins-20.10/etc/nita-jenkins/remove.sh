@@ -50,8 +50,8 @@ else
 fi
 
 # remove docker images
-docker rmi -f ps-docker.artifactory.aslab.juniper.net/jenkins:${VERSION}
-docker rmi -f ps-docker.artifactory.aslab.juniper.net/jenkins:_nita_release_${VERSION}
+docker rmi -f juniper/nita-jenkins:${VERSION}
+docker rmi -f juniper/nita-jenkins:_nita_release_${VERSION}
 
 # remove unused images
 docker images --no-trunc | grep '<none>' | awk '{ print $3 }' | xargs -r docker rmi
