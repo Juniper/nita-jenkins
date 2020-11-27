@@ -51,14 +51,4 @@ VOLUME /var/jenkins_home
 
 HEALTHCHECK --interval=1m --timeout=3s CMD curl -k -s -w "%{http_code}" https://localhost:8443 -o /dev/null || exit 1
 
-LABEL net.juniper.image.release="2.204.6" \
-      net.juniper.image.branch="master" \
-      net.juniper.image.issue.date="02/13/2020" \
-      net.juniper.image.create.date="02/13/2020" \
-      net.juniper.image.mantainer="Juniper Networks, Inc." \
-      net.juniper.support.license="UNLICENSED" \
-      net.juniper.support.expiration.date="02/13/2021" \
-      net.juniper.support.status="UNSUPPORTED" \
-      net.juniper.project.id="12345" \
-      net.juniper.jtac="Add Information" \
-      net.juniper.framework="NITA"
+LABEL net.juniper.framework="NITA"
