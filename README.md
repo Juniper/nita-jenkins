@@ -64,4 +64,4 @@ sudo yum install ./nita-jenkins-20.10-1.noarch.rpm
 
 # Misc
 
-For more information on NITA releases refer to the [README.md](./README.md) for the NITA Webapp <link to that>
+For more information on NITA releases refer to the [README.md](https://github.com/Juniper/nita-webapp/README.md) for the NITA Webapp <link to that>
