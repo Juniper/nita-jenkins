@@ -20,7 +20,7 @@ services:
       - "8443:8443"
     volumes:
       - "/usr/bin/docker:/usr/bin/docker:ro"
-      - "certificates/jenkins_keystore.jks:/var/jenkins_home/jenkins_keystore.jks"
+      - "./certificates/jenkins_keystore.jks:/var/jenkins_home/jenkins_keystore.jks"
       - "/var/nita_project:/project:rw"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "jenkins_home:/var/jenkins_home"
