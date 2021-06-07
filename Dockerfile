@@ -37,7 +37,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 RUN ( curl https://releases.rancher.com/install-docker/19.03.sh | sh ) && \
-    ( curl https://bootstrap.pypa.io/get-pip.py | python3 ) && \
+    ( curl https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3 ) && \
     pip3 install -r /tmp/requirements.txt && \
     rm -rf /tmp/requirements.txt && \
     usermod -aG docker jenkins
