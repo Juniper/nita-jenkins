@@ -33,6 +33,7 @@ try:
         if ("group_vars/" in filename or "host_vars/" in filename) and (".yaml" in filename or ".yml" in filename):
             try:
                 yaml_content = yaml.safe_dump(conf, default_flow_style=False, explicit_start = True)
+                os.makedirs(os.path.dirname(filename), exist_ok=True)
                 with open(filename, 'w') as outfile:
                     outfile.write(yaml_content)
                     os.chmod(filename, 0o775)
