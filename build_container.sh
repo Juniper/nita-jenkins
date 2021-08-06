@@ -14,4 +14,4 @@
 #
 # ********************************************************
 
-docker build -t juniper/nita-jenkins:20.10-1 .
+docker build -t juniper/nita-jenkins:21.7-1 .

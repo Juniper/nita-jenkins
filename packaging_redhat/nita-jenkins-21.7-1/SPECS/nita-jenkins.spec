@@ -17,7 +17,7 @@
 %define        __os_install_post %{_dbpath}/brp-compress
 
 Name:           nita-jenkins
-Version:        20.10
+Version:        21.7
 Release:        1
 Summary:        Network Implementation and Test Automation - Jenkins
 Group:          Development/Tools
@@ -72,5 +72,7 @@ if [ $(getenforce) != Permissive ]; then echo "******  Please disable SELinux du
 %{_sysconfdir}/%{name}/backup/*
 
 %changelog
+* Fri Aug 6 2021 Hugo Ribeiro  21.7-1
+  - Release Bump
 * Wed Sep 23 2020 Hugo Ribeiro  20.10-1
   - OS Release
