@@ -25,7 +25,7 @@ BuildArch:      noarch
 License:        Apache License, Version 2.0, http://www.apache.org/licenses/LICENSE-2.0
 URL:            https://www.juniper.net
 Source0:        %{name}-%{version}.tar.gz
-Requires:       docker-ce, java-11-openjdk-headless
+Requires:       docker-ce, java-11-openjdk-headless == 1:11.0.11.0.9-1.el7_9
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
