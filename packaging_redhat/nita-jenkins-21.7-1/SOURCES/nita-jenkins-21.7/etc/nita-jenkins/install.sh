@@ -4,7 +4,7 @@
 #
 # Project: nita-jenkins
 #
-# Copyright (c) Juniper Networks, Inc., 2020. All rights reserved.
+# Copyright (c) Juniper Networks, Inc., 2021. All rights reserved.
 #
 # Notice and Disclaimer: This code is licensed to you under the Apache 2.0 License (the "License"). You may not use this code except in compliance with the License. This code is not an official Juniper product. You can obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0.html
 #
@@ -15,7 +15,7 @@
 # ********************************************************
 
 PACKAGE=nita-jenkins
-VERSION=20.10-1
+VERSION=21.7-1
 IMAGES_DIR=/usr/share/${PACKAGE}/images
 
 # stop the script if a command fails

@@ -2,7 +2,7 @@
 #
 # Project: nita-jenkins
 #
-# Copyright (c) Juniper Networks, Inc., 2020. All rights reserved.
+# Copyright (c) Juniper Networks, Inc., 2021. All rights reserved.
 #
 # Notice and Disclaimer: This code is licensed to you under the Apache 2.0 License (the "License"). You may not use this code except in compliance with the License. This code is not an official Juniper product. You can obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0.html
 #
@@ -17,7 +17,7 @@
 %define        __os_install_post %{_dbpath}/brp-compress
 
 Name:           nita-jenkins
-Version:        20.10
+Version:        21.7
 Release:        1
 Summary:        Network Implementation and Test Automation - Jenkins
 Group:          Development/Tools
@@ -25,7 +25,7 @@ BuildArch:      noarch
 License:        Apache License, Version 2.0, http://www.apache.org/licenses/LICENSE-2.0
 URL:            https://www.juniper.net
 Source0:        %{name}-%{version}.tar.gz
-Requires:       docker-ce, java-11-openjdk-headless
+Requires:       docker-ce, java-11-openjdk-headless == 1:11.0.11.0.9-1.el7_9
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -72,5 +72,7 @@ if [ $(getenforce) != Permissive ]; then echo "******  Please disable SELinux du
 %{_sysconfdir}/%{name}/backup/*
 
 %changelog
+* Fri Aug 6 2021 Hugo Ribeiro  21.7-1
+  - Release Bump
 * Wed Sep 23 2020 Hugo Ribeiro  20.10-1
   - OS Release
