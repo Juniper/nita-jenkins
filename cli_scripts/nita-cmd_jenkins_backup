@@ -14,7 +14,7 @@
 # ********************************************************
 if [ "$_CLI_RUNNER_DEBUG" == 1 ]; then
         echo `cat <<EOT
-(cd /etc/nita-jenkins/backup/; ./backup-jenkins.sh ${1})
+(cd ${NITAJENKINSDIR/backup_script-/etc/nita-jenkins/backup/}; ./backup-jenkins.sh ${1})
 EOT` >&2
 fi
-(cd /etc/nita-jenkins/backup/; ./backup-jenkins.sh ${1})
+(cd ${NITAJENKINSDIR/backup_script-/etc/nita-jenkins/backup/}; ./backup-jenkins.sh ${1})

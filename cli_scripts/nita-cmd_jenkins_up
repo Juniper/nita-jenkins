@@ -14,7 +14,7 @@
 # ********************************************************
 if [ "$_CLI_RUNNER_DEBUG" == 1 ]; then
         echo `cat <<EOT
-docker-compose -p nitajenkins -f ${NITAJENKINSDIR-/etc/nita-jenkins/docker-compose.yaml} up -d
+docker-compose -p nitajenkins -f ${NITAJENKINSDIR/docker-compose.yaml-/etc/nita-jenkins/docker-compose.yaml} up -d
 EOT` >&2
 fi
-docker-compose -p nitajenkins -f ${NITAJENKINSDIR-/etc/nita-jenkins/docker-compose.yaml} up -d
+docker-compose -p nitajenkins -f ${NITAJENKINSDIR/docker-compose.yaml-/etc/nita-jenkins/docker-compose.yaml} up -d
