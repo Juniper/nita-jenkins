@@ -15,16 +15,16 @@
 if [ "$_CLI_RUNNER_DEBUG" == 1 ]; then
         echo `cat <<EOT
 if [ "${NITAJENKINSDIR}x" == "x" ]; then
-        NITAJENKINSBACKUPDIR=${NITAJENKINSDIR}/backup_script
-else
         NITAJENKINSBACKUPDIR=/etc/nita-jenkins/backup
+else
+        NITAJENKINSBACKUPDIR=${NITAJENKINSDIR}/backup_script
 fi
 (BACKUPFILE=`echo $(cd $(dirname "$1") && pwd -P)/$(basename "$1")`; cd ${NITAJENKINSBACKUPDIR}; ./restore-jenkins.sh ${BACKUPFILE})
 EOT` >&2
 fi
 if [ "${NITAJENKINSDIR}x" == "x" ]; then
-        NITAJENKINSBACKUPDIR=${NITAJENKINSDIR}/backup_script
-else
         NITAJENKINSBACKUPDIR=/etc/nita-jenkins/backup
+else
+        NITAJENKINSBACKUPDIR=${NITAJENKINSDIR}/backup_script
 fi
 (BACKUPFILE=`echo $(cd $(dirname "$1") && pwd -P)/$(basename "$1")`; cd ${NITAJENKINSBACKUPDIR}; ./restore-jenkins.sh ${BACKUPFILE})
