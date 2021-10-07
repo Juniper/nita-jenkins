@@ -14,7 +14,7 @@
 # ********************************************************
 if [ "$_CLI_RUNNER_DEBUG" == 1 ]; then
         echo `cat <<EOT
-docker-compose -p nitajenkins -f /etc/nita-jenkins/docker-compose.yaml restart
+docker-compose -p nitajenkins -f ${NITAJENKINSDIR-/etc/nita-jenkins/docker-compose.yaml} restart
 EOT` >&2
 fi
-docker-compose -p nitajenkins -f /etc/nita-jenkins/docker-compose.yaml restart
+docker-compose -p nitajenkins -f ${NITAJENKINSDIR-/etc/nita-jenkins/docker-compose.yaml} restart
