@@ -12,7 +12,7 @@
 #
 # ********************************************************
 
-FROM jenkins/jenkins:2.204.6
+FROM jenkins/jenkins:lts-jdk11
 
 ENV JAVA_OPTS='-Djenkins.install.runSetupWizard=false -Dhudson.model.DirectoryBrowserSupport.CSP=allow-same-origin'
 ENV JENKINS_USER admin
@@ -29,15 +29,14 @@ USER root
 
 RUN chown -R jenkins:jenkins /var/jenkins_home/init.groovy.d/
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -yqq apt-utils git-core curl libssl-dev build-essential libssl-dev libffi-dev python3-dev python-yaml \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yqq apt-utils git-core curl libssl-dev build-essential libssl-dev libffi-dev python3-dev python3-yaml python3-pip \
     sshpass apache2-suexec-custom wget vim && \
     apt-get clean && \
     apt-get autoremove -y && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*
 
-RUN ( curl https://releases.rancher.com/install-docker/19.03.sh | sh ) && \
-    ( curl https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3 ) && \
+RUN ( curl https://get.docker.com | sh ) && \
     pip3 install -r /tmp/requirements.txt && \
     rm -rf /tmp/requirements.txt && \
     usermod -aG docker jenkins
