@@ -23,7 +23,7 @@ COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 COPY basic-security.groovy /var/jenkins_home/init.groovy.d/
 COPY write_yaml_files.py /usr/local/bin
 
-RUN install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 USER root
 
