@@ -1,12 +1,12 @@
-# NITA Jenkins 21.7
+# NITA Jenkins 22.8
 
-Welcome to NITA 21.7.
+Welcome to NITA 22.8.
 
 Packages built from this branch will be nita-*-21.7-x where x is the packaging release.
 This branch also contains patches from other branches or minor modifications as required to support the stability and usability of the release.
 There are also some backwards compatibility packages here for ansible and robot that allow projects written for NITA 3.0.7 to work without having to make any changes.
 
-Note that NITA 21.7 backward compatible with NITA 21.7 projects, provided the correct ansible and robot containers are installed.
+Note that NITA 22.8 backward compatible with NITA 21.7 projects, provided the correct ansible and robot containers are installed.
 
 # Copyright
 
@@ -39,28 +39,11 @@ NITA depends on docker-ce and docker-compose.
 
 ## Installation
 
-If you do not have the the required package files for your system, .deb for Ubuntu or .rpm for Centos refer to [BUILD.md](./BUILD.md) file for instructions on how to generate these files.
+If you do not have the the required package files for your system, refer to [BUILD.md](./BUILD.md) file for instructions on how to generate these files.
 
 ### Docker compose
 
 See https://github.com/Juniper/nita-webapp for more details on how to install both the jenkins and the webapp usign docker compose.
-
-### Ubuntu packages
-
-If you have been provided with the .deb package file, then follow the instructions provided in the [Dependencies](##Dependencies) section above and then run the following command:
-
-```bash
-sudo apt-get install ./nita-jenkins-21.7-1.deb
-```
-
-### Centos packages
-
-If you have been provided with the .rpm package file, then follow the instructions provided in the [Dependencies](##Dependencies) section above and then run the following command:
-
-
-```bash
-sudo yum install ./nita-jenkins-21.7-1.noarch.rpm
-```
 
 # Misc
 
