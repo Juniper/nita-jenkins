@@ -38,16 +38,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*
 
-RUN ( curl https://get.docker.com | sh ) && \
-    pip3 install -r /tmp/requirements.txt && \
-    rm -rf /tmp/requirements.txt && \
-    usermod -aG docker jenkins
+RUN pip3 install --break-system-packages -r /tmp/requirements.txt && \
+    rm -rf /tmp/requirements.txt
 
 RUN curl -k -LO https://storage.googleapis.com/kubernetes-release/release/`curl -k -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl
 
-RUN touch /var/run/docker.sock && chmod 777 /var/run/docker.sock
 
 USER jenkins
 
