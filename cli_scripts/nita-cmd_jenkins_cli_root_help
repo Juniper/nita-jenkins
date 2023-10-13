@@ -3,7 +3,7 @@
 #
 # Project: nita-jenkins
 #
-# Copyright (c) Juniper Networks, Inc., 2021. All rights reserved.
+# Copyright (c) Juniper Networks, Inc., 2023. All rights reserved.
 #
 # Notice and Disclaimer: This code is licensed to you under the Apache 2.0 License (the "License"). You may not use this code except in compliance with the License. This code is not an official Juniper product. You can obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0.html
 #
@@ -14,5 +14,5 @@
 # ********************************************************
         echo -n "    nita-cmd jenkins cli root => "
         echo `cat <<EOT
-Attaches local stdin, stdout and stderr streams to jenkins running container with "root" user.
+Create an interactive session in the jenkins pod as the jenkins user, by executing a bash shell and using stdin as a tty.
 EOT` >&2
