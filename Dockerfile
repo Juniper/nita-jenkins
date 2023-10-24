@@ -24,6 +24,7 @@ COPY basic-security.groovy /var/jenkins_home/init.groovy.d/
 COPY write_yaml_files.py /usr/local/bin
 COPY robot.py /usr/local/bin
 COPY create_ansible_job_k8s.py /usr/local/bin
+COPY jenkins.crt /root
 
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
@@ -45,6 +46,7 @@ RUN curl -k -LO https://storage.googleapis.com/kubernetes-release/release/`curl 
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl
 
+RUN keytool -import -keystore /opt/java/openjdk/lib/security/cacerts -file /root/jenkins.crt
 
 USER jenkins
 
