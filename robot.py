@@ -60,6 +60,7 @@ with open(f'{job_ansible}.yaml', 'w') as file:
 job_2 = f"""apiVersion: batch/v1
 kind: Job
 metadata:
+  namespace: nita
   name: {job_robot}
 spec:
   backoffLimit: 0
