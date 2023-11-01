@@ -31,6 +31,7 @@ path = os.getcwd()
 job_1 = f"""apiVersion: batch/v1
 kind: Job
 metadata:
+  namespace: nita
   name: {job_ansible}
 spec:
   backoffLimit: 0
