@@ -23,6 +23,7 @@ job_yaml = f"""
 apiVersion: batch/v1
 kind: Job
 metadata:
+  namespace: nita
   name: {job_name}
 spec:
   backoffLimit: 0
