@@ -37,9 +37,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 RUN ( curl https://get.docker.com | sh ) && \
-    pip3 install -r /tmp/requirements.txt && \
-    rm -rf /tmp/requirements.txt && \
     usermod -aG docker jenkins
+
+RUN pip3 install --break-system-packages -r /tmp/requirements.txt && \
+    rm -rf /tmp/requirements.txt 
 
 RUN touch /var/run/docker.sock && chmod 777 /var/run/docker.sock
 
