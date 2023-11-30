@@ -20,12 +20,12 @@ services:
       - "8443:8443"
     volumes:
       - "/usr/bin/docker:/usr/bin/docker:ro"
-      - "./certificates/jenkins_keystore.jks:/var/jenkins_home/jenkins_keystore.jks"
+      - "./certificates:/certificates"
       - "/var/nita_project:/project:rw"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "jenkins_home:/var/jenkins_home"
     environment:
-      - JENKINS_OPTS=--httpPort=8080 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks --httpsKeyStorePassword=nita123
+      - JENKINS_OPTS=--httpPort=8080 --httpsPort=8443 --httpsKeyStore=/certificates/jenkins_keystore.jks --httpsKeyStorePassword=nita123
       - JENKINS_USER
       - JENKINS_PASS
     networks:
