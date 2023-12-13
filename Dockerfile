@@ -22,6 +22,9 @@ COPY requirements.txt /tmp/requirements.txt
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 COPY basic-security.groovy /var/jenkins_home/init.groovy.d/
 COPY write_yaml_files.py /usr/local/bin
+COPY robot.py /usr/local/bin
+COPY create_ansible_job_k8s.py /usr/local/bin
+COPY jenkins.crt /root
 
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
@@ -36,12 +39,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*
 
-RUN ( curl https://get.docker.com | sh ) && \
-    pip3 install -r /tmp/requirements.txt && \
-    rm -rf /tmp/requirements.txt && \
-    usermod -aG docker jenkins
+RUN pip3 install --break-system-packages -r /tmp/requirements.txt && \
+    rm -rf /tmp/requirements.txt
 
-RUN touch /var/run/docker.sock && chmod 777 /var/run/docker.sock
+RUN curl -k -LO https://storage.googleapis.com/kubernetes-release/release/`curl -k -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
 
 USER jenkins
 
