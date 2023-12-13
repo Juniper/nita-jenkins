@@ -3,7 +3,7 @@
 #
 # Project: nita-jenkins
 #
-# Copyright (c) Juniper Networks, Inc., 2021. All rights reserved.
+# Copyright (c) Juniper Networks, Inc., 2023. All rights reserved.
 #
 # Notice and Disclaimer: This code is licensed to you under the Apache 2.0 License (the "License"). You may not use this code except in compliance with the License. This code is not an official Juniper product. You can obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0.html
 #
@@ -12,9 +12,32 @@
 # Third-Party Code: This code may depend on other components under separate copyright notice and license terms. Your use of the source code for those components is subject to the terms and conditions of the respective license as noted in the Third-Party source code file.
 #
 # ********************************************************
-if [ "$_CLI_RUNNER_DEBUG" == 1 ]; then
-        echo `cat <<EOT
-docker exec -it nitajenkins_jenkins_1 /usr/local/openjdk-8/bin/java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ enable-job \${1}
-EOT` >&2
+
+# Priority order is top down
+
+[ $# -eq 0 ] && {
+
+        echo "Error: please provide Jenkins job name as final argument"
+        exit 1
+
+}
+
+if [ -x "$(command -v kubectl)" ]; then
+
+    export POD=$(kubectl get pods --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
+    CMD="kubectl exec -it $POD -- bash -c 'java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ enable-job ${1}'"
+
+elif [ -x "$(command -v docker)" ]; then
+
+    CMD='docker exec -it nitajenkins_jenkins_1 /usr/local/openjdk-8/bin/java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ enable-job ${1}'
+
+else
+
+  echo 'Error: cannot find required binaries.' >&2
+  exit 1
+
 fi
-docker exec -it nitajenkins_jenkins_1 /usr/local/openjdk-8/bin/java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ enable-job ${1}
+
+[ ${_CLI_RUNNER_DEBUG} ] && echo ${CMD}>&2
+
+eval "${CMD}"
