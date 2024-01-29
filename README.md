@@ -1,12 +1,12 @@
-# NITA Jenkins 22.8
+# NITA Jenkins 23.12
 
-Welcome to NITA 22.8.
+Welcome to NITA 23.12.
 
 Packages built from this branch will be nita-*-21.7-x where x is the packaging release.
 This branch also contains patches from other branches or minor modifications as required to support the stability and usability of the release.
 There are also some backwards compatibility packages here for ansible and robot that allow projects written for NITA 3.0.7 to work without having to make any changes.
 
-Note that NITA 22.8 backward compatible with NITA 21.7 projects, provided the correct ansible and robot containers are installed.
+Note that NITA 23.12 backward compatible with NITA 21.7 projects, provided the correct ansible and robot containers are installed.
 
 # Copyright
 
