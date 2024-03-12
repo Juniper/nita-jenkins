@@ -17,8 +17,8 @@
 
 if [ -x "$(command -v kubectl)" ]; then
 
-    export POD=$(kubectl get pods --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
-    CMD="kubectl exec -it $POD -- bash -c 'java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ list-plugins'| awk '{print \$1,\":\", \$NF}'|sort -u"
+    export POD=$(kubectl get pods -n nita --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
+    CMD="kubectl exec -it $POD -n nita -- /bin/bash -c 'java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ list-plugins'| awk '{print \$1,\":\", \$NF}'|sort -u"
 
 elif [ -x "$(command -v docker)" ]; then
 
