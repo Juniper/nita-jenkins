@@ -16,8 +16,8 @@
 
 if [ -x "$(command -v kubectl)" ]; then
 
-    export POD=$(kubectl get pods --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
-    CMD="kubectl get pods $POD -o json | jq '.spec.containers | .[].ports'"
+    export POD=$(kubectl get pods -n nita --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
+    CMD="kubectl get pods $POD -n nita -o json | jq '.spec.containers | .[].ports'"
 
 elif [ -x "$(command -v docker)" ]; then
 
