@@ -17,7 +17,7 @@
 
 if [ -x "$(command -v kubectl)" ]; then
 
-    CMD="kubectl create -f ${NITAJENKINSDIR-/etc/nita-jenkins}/jenkins-deployment.yaml"
+    CMD="kubectl create -f ${NITAJENKINSDIR-/opt/nita/k8s}/jenkins-deployment.yaml"
 
 elif [ -x "$(command -v docker)" ]; then
 

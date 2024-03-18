@@ -17,8 +17,8 @@
 
 if [ -x "$(command -v kubectl)" ]; then
 
-    export POD=$(kubectl get pods --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
-    CMD="kubectl exec -it $POD -- bash -c 'git config --global http.sslVerify false'"
+    export POD=$(kubectl get pods -n nita --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
+    CMD="kubectl exec -it $POD -n nita -- /bin/bash -c 'git config --global http.sslVerify false'"
 
 elif [ -x "$(command -v docker)" ]; then
 
