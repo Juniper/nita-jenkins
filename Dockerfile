@@ -12,8 +12,9 @@
 #
 # ********************************************************
 
-FROM jenkins/jenkins:lts-jdk11
+FROM jenkins/jenkins:lts-jdk17
 
+ARG KUBECTL_ARCH=amd64
 ENV JAVA_OPTS='-Djenkins.install.runSetupWizard=false -Dhudson.model.DirectoryBrowserSupport.CSP=allow-same-origin'
 ENV JENKINS_USER admin
 ENV JENKINS_PASS admin
@@ -41,7 +42,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
 RUN pip3 install --break-system-packages -r /tmp/requirements.txt && \
     rm -rf /tmp/requirements.txt
 
-RUN curl -k -LO https://storage.googleapis.com/kubernetes-release/release/`curl -k -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && \
+RUN curl -k -LO https://storage.googleapis.com/kubernetes-release/release/`curl -k -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/${KUBECTL_ARCH}/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl
 

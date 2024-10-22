@@ -14,4 +14,10 @@
 #
 # ********************************************************
 
-docker build -t juniper/nita-jenkins:23.12-1 .
+set -e
+KUBECTL_ARCH='amd64'
+ARCH=`uname -p`
+if [ $ARCH = aarch64 ] ; then
+   KUBECTL_ARCH='arm64'	
+fi   
+docker build --build-arg KUBECTL_ARCH=${KUBECTL_ARCH} -t juniper/nita-jenkins:23.12-2 .
