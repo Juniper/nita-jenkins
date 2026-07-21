@@ -14,10 +14,10 @@
 
 FROM jenkins/jenkins:lts-jdk17
 
-ARG KUBECTL_ARCH=amd64
+ARG TARGETARCH
 ENV JAVA_OPTS='-Djenkins.install.runSetupWizard=false -Dhudson.model.DirectoryBrowserSupport.CSP=allow-same-origin'
-ENV JENKINS_USER admin
-ENV JENKINS_PASS admin
+ENV JENKINS_USER=admin
+ENV JENKINS_PASS=admin
 
 COPY requirements.txt /tmp/requirements.txt
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
@@ -43,9 +43,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && \
 RUN pip3 install --break-system-packages -r /tmp/requirements.txt && \
     rm -rf /tmp/requirements.txt
 
-RUN curl -k -LO https://storage.googleapis.com/kubernetes-release/release/`curl -k -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/${KUBECTL_ARCH}/kubectl && \
-    chmod +x ./kubectl && \
-    mv ./kubectl /usr/local/bin/kubectl
+RUN KUBECTL_VERSION="$(curl --fail --location --silent --show-error https://dl.k8s.io/release/stable.txt)" && \
+    curl --fail --location --silent --show-error \
+      --output /usr/local/bin/kubectl \
+      "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl" && \
+    chmod +x /usr/local/bin/kubectl
 
 USER jenkins
 
@@ -55,3 +57,4 @@ VOLUME /var/jenkins_home
 HEALTHCHECK --interval=1m --timeout=3s CMD curl -k -s -w "%{http_code}" https://localhost:8443 -o /dev/null || exit 1
 
 LABEL net.juniper.framework="NITA"
+LABEL org.opencontainers.image.source="https://github.com/Juniper/nita-jenkins"
