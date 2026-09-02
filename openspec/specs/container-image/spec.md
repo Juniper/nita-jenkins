@@ -3,9 +3,7 @@
 ## Purpose
 Defines how the nita-jenkins Docker image is built, what base image it uses,
 which tools are installed, and how the image is tagged and health-checked.
-
 ## Requirements
-
 ### Requirement: Base image
 The system SHALL use `jenkins/jenkins:lts-jdk17` as the base Docker image.
 
@@ -76,9 +74,15 @@ The system SHALL declare two volumes: `/usr/share/jenkins/ref/plugins` and `/var
 - THEN Jenkins jobs, configuration, and installed plugins are preserved
 
 ### Requirement: Health check on HTTPS
-The system SHALL include a Docker HEALTHCHECK that performs an HTTPS request to `localhost:8443` and exits non-zero if the response is not received.
+The system SHALL include a Docker HEALTHCHECK that performs a request to the prefixed Jenkins path (`/jenkins/login`) and exits non-zero if the response is not received.
 
 #### Scenario: Container reports healthy when Jenkins is up
-- GIVEN Jenkins is fully started and serving HTTPS
-- WHEN the Docker health check runs
-- THEN `docker inspect` reports the container status as `healthy`
+- GIVEN Jenkins is fully started and serving under the `/jenkins` prefix
+- WHEN the Docker health check requests `/jenkins/login`
+- THEN a successful response is received and `docker inspect` reports the container status as `healthy`
+
+#### Scenario: Container reports unhealthy when the prefix is unreachable
+- GIVEN Jenkins is not serving under the `/jenkins` prefix
+- WHEN the Docker health check requests `/jenkins/login`
+- THEN no successful response is received and the health check exits non-zero
+

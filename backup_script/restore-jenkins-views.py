@@ -15,8 +15,8 @@ Third-Party Code: This code may depend on other components under separate copyri
 import xml.etree.ElementTree as ET
 import os
 
-URL = 'https://127.0.0.1:8443/'
-#URL = 'http://127.0.0.1:8080/'
+URL = 'https://127.0.0.1:8443/jenkins/'
+#URL = 'http://127.0.0.1:8080/jenkins/'
 JENKINS_CONFIG_XML = '/var/jenkins_home/config.xml'
 
 config = ET.parse(JENKINS_CONFIG_XML).getroot()

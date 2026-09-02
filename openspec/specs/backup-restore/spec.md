@@ -3,9 +3,7 @@
 ## Purpose
 Defines how Jenkins configuration, jobs, plugins, users, and secrets are backed up
 to tar archives and restored from them using scripts in `backup_script/`.
-
 ## Requirements
-
 ### Requirement: Backup destination directory required
 The system SHALL require a destination directory path as the first argument to `backup-jenkins.sh` and exit non-zero if it is absent.
 
@@ -77,3 +75,17 @@ The `nita-cmd_jenkins_restore` CLI script SHALL resolve the supplied archive pat
 - GIVEN `nita-cmd_jenkins_restore ../backup.tar` is called from a subdirectory
 - WHEN the script runs
 - THEN `restore-jenkins.sh` receives the absolute path to `backup.tar`
+
+### Requirement: Backup and restore endpoints include the /jenkins path prefix
+The backup and restore scripts SHALL target the Jenkins server endpoint with the `/jenkins` path prefix when listing plugins, invoking the CLI, or calling the Jenkins HTTP API.
+
+#### Scenario: Backup plugin listing uses the prefixed endpoint
+- GIVEN `backup-jenkins-in.sh` lists installed plugins via `jenkins-cli.jar`
+- WHEN it constructs the Jenkins endpoint URL
+- THEN the URL includes the `/jenkins` path prefix
+
+#### Scenario: Restore views script uses the prefixed base URL
+- GIVEN `restore-jenkins-views.py` calls the Jenkins HTTP API
+- WHEN it constructs the base URL
+- THEN the base URL includes the `/jenkins` path prefix
+

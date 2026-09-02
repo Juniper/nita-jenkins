@@ -4,9 +4,7 @@
 Defines the behaviour of all `nita-cmd_jenkins_*` shell scripts in `cli_scripts/`,
 which wrap Jenkins operations and dispatch to either `kubectl` or `docker-compose`
 depending on the available runtime.
-
 ## Requirements
-
 ### Requirement: Runtime dispatch — kubectl preferred over docker-compose
 All CLI lifecycle commands SHALL prefer `kubectl` when it is available on `PATH`, falling back to `docker-compose`, and exiting with an error if neither is found.
 
@@ -120,3 +118,17 @@ Each CLI command SHALL have a corresponding `*_help` file that documents its usa
 - GIVEN the `cli_scripts/` directory is inspected
 - WHEN its contents are listed
 - THEN for every `nita-cmd_jenkins_<action>` file there is a `nita-cmd_jenkins_<action>_help` file
+
+### Requirement: Jenkins CLI endpoint includes the /jenkins path prefix
+Every CLI command that invokes `jenkins-cli.jar` (job management, plugin introspection, and informational commands) SHALL target the Jenkins server endpoint with the `/jenkins` path prefix.
+
+#### Scenario: CLI jar targets the prefixed endpoint
+- GIVEN a CLI command runs `jenkins-cli.jar -s` against the Jenkins server
+- WHEN the endpoint URL is constructed
+- THEN it includes the `/jenkins` path prefix (e.g. ends with `.../jenkins/`)
+
+#### Scenario: No CLI command targets the bare root endpoint
+- GIVEN the full set of `cli_scripts/*` commands
+- WHEN their Jenkins endpoints are inspected
+- THEN none targets the Jenkins server at the bare root path
+

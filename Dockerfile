@@ -54,7 +54,7 @@ USER jenkins
 VOLUME /usr/share/jenkins/ref/plugins
 VOLUME /var/jenkins_home
 
-HEALTHCHECK --interval=1m --timeout=3s CMD curl -k -s -w "%{http_code}" https://localhost:8443 -o /dev/null || exit 1
+HEALTHCHECK --interval=1m --timeout=3s CMD curl -k -s -w "%{http_code}" http://localhost:8080/jenkins/login -o /dev/null || exit 1
 
 LABEL net.juniper.framework="NITA"
 LABEL org.opencontainers.image.source="https://github.com/Juniper/nita-jenkins"

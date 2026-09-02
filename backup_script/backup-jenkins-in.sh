@@ -37,7 +37,7 @@ find /var/jenkins_home/jobs/ -maxdepth 2 -name '*.xml' >> $LOG_FILE
 # Nodes
 find /var/jenkins_home/nodes/ -maxdepth 1 >> $LOG_FILE
 # Plugins
-/usr/local/openjdk-8/bin/java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/ list-plugins | awk '{print $1":"$NF}' | sort > $PLUGINS_LIST_FILE
+/usr/local/openjdk-8/bin/java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/jenkins/ list-plugins | awk '{print $1":"$NF}' | sort > $PLUGINS_LIST_FILE
 find /var/jenkins_home/plugins/ -maxdepth 1 -name '*.jpi' > $PLUGINS_LOG_FILE
 # Secrets
 find /var/jenkins_home/secrets/ -maxdepth 1 -name '*.xml' >> $LOG_FILE

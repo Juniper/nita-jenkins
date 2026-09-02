@@ -17,6 +17,7 @@ Third-Party Code: This code may depend on other components under separate copyri
 import hudson.security.*
 import hudson.security.csrf.*
 import jenkins.model.*
+import jenkins.model.JenkinsLocationConfiguration
 
 def env = System.getenv()
 def instance = Jenkins.getInstance()
@@ -53,5 +54,13 @@ instance.setAuthorizationStrategy(strategy)
 // Disable CSRF protection — crumbs are only meaningful for browser-session auth,
 // not for internal service-to-service HTTP calls on port 8080.
 instance.setCrumbIssuer(null)
+
+// Configure the external root URL so Jenkins advertises correct self-URLs
+// (including the /jenkins prefix) when running behind a TLS-terminating proxy.
+if (env.JENKINS_URL) {
+    def locationConfig = JenkinsLocationConfiguration.get()
+    locationConfig.setUrl(env.JENKINS_URL)
+    locationConfig.save()
+}
 
 instance.save()
