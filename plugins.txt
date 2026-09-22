@@ -1,2 +1,3 @@
-robot
-ansicolor
+robot:6.2.1
+ansicolor:536.v13fa_b_860c267
+matrix-auth:3.3

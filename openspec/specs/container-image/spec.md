@@ -5,12 +5,11 @@ Defines how the nita-jenkins Docker image is built, what base image it uses,
 which tools are installed, and how the image is tagged and health-checked.
 ## Requirements
 ### Requirement: Base image
-The system SHALL use `jenkins/jenkins:lts-jdk17` as the base Docker image.
+The system SHALL use the pinned `jenkins/jenkins:2.568.2-jdk21` image as both the Python builder base and final Jenkins runtime base.
 
-#### Scenario: Base image is LTS with JDK 17
-- GIVEN a build of the nita-jenkins Docker image
-- WHEN the Dockerfile is processed
-- THEN the image is derived from `jenkins/jenkins:lts-jdk17`
+#### Scenario: Image uses the tested Java 21 LTS release
+- **WHEN** the nita-jenkins Dockerfile is built
+- **THEN** both stages derive from `jenkins/jenkins:2.568.2-jdk21`
 
 ### Requirement: Setup wizard disabled
 The system SHALL disable the Jenkins setup wizard on first boot.
@@ -29,25 +28,30 @@ The system SHALL set the Content-Security-Policy to `allow-same-origin` to suppo
 - THEN the browser does not block the content due to CSP restrictions
 
 ### Requirement: Architecture-aware kubectl installation
-The system SHALL install `kubectl` at the stable release version, selecting the binary for the host CPU architecture (`amd64` or `arm64`).
+The system SHALL install a pinned `kubectl` release selected with BuildKit `TARGETARCH`, verify it using the committed checksum for `amd64` or `arm64`, and reject unsupported architectures.
 
-#### Scenario: Build on amd64 host
-- GIVEN `KUBECTL_ARCH` build arg is `amd64`
-- WHEN the image is built
-- THEN the amd64 `kubectl` binary is placed at `/usr/local/bin/kubectl`
+#### Scenario: Verified amd64 kubectl
+- **WHEN** `TARGETARCH` is `amd64`
+- **THEN** the amd64 binary is installed at `/usr/local/bin/kubectl` only after its SHA-256 checksum succeeds
 
-#### Scenario: Build on arm64 host
-- GIVEN `KUBECTL_ARCH` build arg is `arm64`
-- WHEN the image is built
-- THEN the arm64 `kubectl` binary is placed at `/usr/local/bin/kubectl`
+#### Scenario: Verified arm64 kubectl
+- **WHEN** `TARGETARCH` is `arm64`
+- **THEN** the arm64 binary is installed at `/usr/local/bin/kubectl` only after its SHA-256 checksum succeeds
+
+#### Scenario: Unsupported kubectl architecture
+- **WHEN** `TARGETARCH` is neither `amd64` nor `arm64`
+- **THEN** the image build fails without installing an unverified binary
 
 ### Requirement: System packages installed
-The system SHALL install the following OS packages: `git-core`, `curl`, `libssl-dev`, `build-essential`, `libffi-dev`, `python3-dev`, `python3-yaml`, `python3-pip`, `sshpass`, `apache2-suexec-custom`, `wget`, `vim`.
+The final image SHALL contain only the operating-system packages required by NITA Jenkins jobs: `apache2-suexec-custom`, `ca-certificates`, `curl`, `git`, `openssh-client`, `python3`, and `sshpass`; compiler, development-header, editor, wget, and Git LFS packages SHALL NOT remain in the runtime.
 
-#### Scenario: Required binaries available inside container
-- GIVEN the built container image
-- WHEN a Jenkins job runs inside the container
-- THEN `git`, `curl`, `python3`, `pip3`, and `sshpass` are available on `PATH`
+#### Scenario: Required runtime tools are available
+- **WHEN** a Jenkins job runs in the final image
+- **THEN** Git, curl, Python, SSH, and sshpass are available on `PATH`
+
+#### Scenario: Build-only tools are excluded
+- **WHEN** the final runtime filesystem is inspected
+- **THEN** the Python compiler toolchain and Git LFS executable are absent
 
 ### Requirement: Python scripts deployed to PATH
 The system SHALL copy `write_yaml_files.py`, `robot.py`, and `create_ansible_job_k8s.py` to `/usr/local/bin` and make them executable.

@@ -1,0 +1,19 @@
+vulnerabilities:
+  - id: CVE-2026-60002
+    purls:
+      - pkg:deb/debian/openssh-client
+    statement: >-
+      The client-side flaw requires a malicious SSH server changing host keys
+      during re-keying; NITA connects only to operator-selected lab systems.
+      NITA maintainers own this exception under
+      https://github.com/Juniper/nita/issues/75 pending a Debian stable fix.
+    expired_at: 2026-11-03
+  - id: CVE-2026-6653
+    purls:
+      - pkg:deb/debian/libxml2
+    statement: >-
+      Malicious DTD input can terminate XML parsing, but NITA accepts XML only
+      from operator-selected lab devices and repositories. NITA maintainers own
+      this exception under https://github.com/Juniper/nita/issues/75 pending a
+      Debian stable fix.
+    expired_at: 2026-11-03

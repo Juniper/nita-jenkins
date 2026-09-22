@@ -3,16 +3,13 @@
 ## Purpose
 Defines the Jenkins plugin set required by nita-jenkins, how plugins are installed
 at image build time, and the volume used to cache them.
-
 ## Requirements
-
 ### Requirement: Plugin list declared in version control
-The system SHALL maintain a `plugins.txt` file listing all required Jenkins plugins so the installed set is reproducible from source.
+The system SHALL maintain `plugins.txt` with an explicit tested version for every required Jenkins plugin and install that exact set with `jenkins-plugin-cli` during the image build.
 
-#### Scenario: Plugins installed at image build time
-- GIVEN `plugins.txt` lists the required plugins
-- WHEN the Docker image is built
-- THEN every plugin named in `plugins.txt` is installed via `jenkins-plugin-cli`
+#### Scenario: Pinned plugins install at build time
+- **WHEN** the Docker image is built from an unchanged `plugins.txt`
+- **THEN** every named plugin is installed at its committed version without resolving an unpinned latest release
 
 ### Requirement: Robot Framework plugin installed
 The system SHALL include the `robot` plugin to display Robot Framework test results in the Jenkins UI.
@@ -37,3 +34,10 @@ The system SHALL declare `/usr/share/jenkins/ref/plugins` as a Docker volume so 
 - GIVEN a named volume is mounted at `/usr/share/jenkins/ref/plugins`
 - WHEN the container is started
 - THEN installed plugin JPI files persist on that volume
+
+### Requirement: Matrix authorization plugin installed
+The system SHALL include a pinned `matrix-auth` plugin because the startup security initializer configures a `GlobalMatrixAuthorizationStrategy` for the NITA administrator and internal job calls.
+
+#### Scenario: Security initialization resolves matrix authorization
+- **WHEN** Jenkins starts with a new empty home directory
+- **THEN** the matrix authorization classes are available and the initializer installs the configured role permissions without a Groovy compilation error

@@ -50,22 +50,70 @@ jobs:
 
       - name: Smoke-test Jenkins runtime
         run: |
-          docker run --rm --entrypoint bash "${TEST_IMAGE}" -ec '
+          docker run --rm --workdir /tmp --entrypoint bash "${TEST_IMAGE}" -ec '
             java -version
+            java -jar /usr/share/jenkins/jenkins.war --version
+            test "$(command -v python3)" = "/opt/nita-venv/bin/python3"
             python3 -c "import ansible, jenkins, jenkinsapi, jnpr.junos, ncclient, yaml"
+            python3 -m pip check
+            write_yaml_files.py
+            create_ansible_job_k8s.py smoke-job
+            robot.py smoke-ansible smoke-robot
+            test -s smoke-job.yaml
+            test -s smoke-ansible.yaml
+            test -s smoke-robot.yaml
             test -s /usr/share/jenkins/ref/plugins/robot.jpi
             test -s /usr/share/jenkins/ref/plugins/ansicolor.jpi
+            test -s /usr/share/jenkins/ref/plugins/matrix-auth.jpi
             kubectl version --client
           '
 
+      - name: Smoke-test Jenkins startup and prefixed health endpoint
+        run: |
+          container_name="nita-jenkins-smoke-${{ matrix.architecture }}"
+          cleanup() {
+            docker rm --force "${container_name}" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          docker run --detach --name "${container_name}" \
+            --env JENKINS_OPTS=--prefix=/jenkins \
+            --health-interval=5s --health-retries=30 \
+            "${TEST_IMAGE}"
+
+          for _ in {1..24}; do
+            health_state="$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")"
+            [[ "${health_state}" == "healthy" ]] && break
+            if [[ "${health_state}" == "unhealthy" ]]; then
+              docker logs "${container_name}"
+              exit 1
+            fi
+            sleep 5
+          done
+
+          test "$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")" = "healthy"
+          docker exec "${container_name}" curl --fail --silent --show-error \
+            http://localhost:8080/jenkins/login --output /dev/null
+          docker exec "${container_name}" curl --fail --silent --show-error \
+            --user admin:admin http://localhost:8080/jenkins/api/json --output /dev/null
+          if docker logs "${container_name}" 2>&1 | grep --quiet 'Failed to run script'; then
+            docker logs "${container_name}"
+            exit 1
+          fi
+
       - name: Scan HIGH and CRITICAL vulnerabilities
-        uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          TRIVY_SHOW_SUPPRESSED: "true"
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
+          version: v0.69.3
           image-ref: ${{ env.TEST_IMAGE }}
+          scanners: vuln
           format: json
           output: trivy-${{ matrix.architecture }}.json
           severity: HIGH,CRITICAL
           exit-code: "0"
+          trivyignores: .trivyignore.yaml
 
       - name: Upload vulnerability report
         if: always()
@@ -75,6 +123,18 @@ jobs:
           path: trivy-${{ matrix.architecture }}.json
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Enforce CRITICAL vulnerability baseline
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          version: v0.69.3
+          skip-setup-trivy: true
+          image-ref: ${{ env.TEST_IMAGE }}
+          scanners: vuln
+          format: table
+          severity: CRITICAL
+          exit-code: "1"
+          trivyignores: .trivyignore.yaml
 
   publish-platform:
     name: Publish ${{ matrix.platform }} digest
@@ -131,22 +191,72 @@ jobs:
           PUBLISHED_IMAGE: ${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
         run: |
           docker pull "${PUBLISHED_IMAGE}"
-          docker run --rm --entrypoint bash "${PUBLISHED_IMAGE}" -ec '
+          docker run --rm --workdir /tmp --entrypoint bash "${PUBLISHED_IMAGE}" -ec '
             java -version
+            java -jar /usr/share/jenkins/jenkins.war --version
+            test "$(command -v python3)" = "/opt/nita-venv/bin/python3"
             python3 -c "import ansible, jenkins, jenkinsapi, jnpr.junos, ncclient, yaml"
+            python3 -m pip check
+            write_yaml_files.py
+            create_ansible_job_k8s.py smoke-job
+            robot.py smoke-ansible smoke-robot
+            test -s smoke-job.yaml
+            test -s smoke-ansible.yaml
+            test -s smoke-robot.yaml
             test -s /usr/share/jenkins/ref/plugins/robot.jpi
             test -s /usr/share/jenkins/ref/plugins/ansicolor.jpi
+            test -s /usr/share/jenkins/ref/plugins/matrix-auth.jpi
             kubectl version --client
           '
 
+      - name: Smoke-test published Jenkins startup and prefixed health endpoint
+        env:
+          PUBLISHED_IMAGE: ${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+        run: |
+          container_name="nita-jenkins-published-smoke-${{ matrix.architecture }}"
+          cleanup() {
+            docker rm --force "${container_name}" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          docker run --detach --name "${container_name}" \
+            --env JENKINS_OPTS=--prefix=/jenkins \
+            --health-interval=5s --health-retries=30 \
+            "${PUBLISHED_IMAGE}"
+
+          for _ in {1..24}; do
+            health_state="$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")"
+            [[ "${health_state}" == "healthy" ]] && break
+            if [[ "${health_state}" == "unhealthy" ]]; then
+              docker logs "${container_name}"
+              exit 1
+            fi
+            sleep 5
+          done
+
+          test "$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")" = "healthy"
+          docker exec "${container_name}" curl --fail --silent --show-error \
+            http://localhost:8080/jenkins/login --output /dev/null
+          docker exec "${container_name}" curl --fail --silent --show-error \
+            --user admin:admin http://localhost:8080/jenkins/api/json --output /dev/null
+          if docker logs "${container_name}" 2>&1 | grep --quiet 'Failed to run script'; then
+            docker logs "${container_name}"
+            exit 1
+          fi
+
       - name: Scan published platform digest
-        uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          TRIVY_SHOW_SUPPRESSED: "true"
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
+          version: v0.69.3
           image-ref: ${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          scanners: vuln
           format: json
           output: trivy-published-${{ matrix.architecture }}.json
           severity: HIGH,CRITICAL
           exit-code: "0"
+          trivyignores: .trivyignore.yaml
 
       - name: Upload published-digest vulnerability report
         if: always()
@@ -156,6 +266,18 @@ jobs:
           path: trivy-published-${{ matrix.architecture }}.json
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Enforce published CRITICAL vulnerability baseline
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          version: v0.69.3
+          skip-setup-trivy: true
+          image-ref: ${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          scanners: vuln
+          format: table
+          severity: CRITICAL
+          exit-code: "1"
+          trivyignores: .trivyignore.yaml
 
       - name: Export digest marker
         run: |

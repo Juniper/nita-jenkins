@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # ********************************************************
 #
 # Project: nita-jenkins
@@ -46,4 +46,3 @@ try:
 except Exception as e:
     print(e)
     print("************** No configuration data is received **************************")
-

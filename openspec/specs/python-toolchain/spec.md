@@ -3,16 +3,17 @@
 ## Purpose
 Defines the Python 3 packages installed into the nita-jenkins image, ensuring all
 pipeline scripts and automation tools are available at runtime.
-
 ## Requirements
-
 ### Requirement: Python dependencies declared in requirements.txt
-The system SHALL maintain a `requirements.txt` file listing all Python packages required by pipeline scripts so dependencies are reproducible.
+The system SHALL declare every direct Python dependency at an exact tested version in `requirements.txt`, install that set into `/opt/nita-venv` in a builder stage, verify it with `pip check`, and expose the copied virtual environment on runtime `PATH`.
 
-#### Scenario: Packages installed into image
-- GIVEN `requirements.txt` lists all required packages
-- WHEN the Docker image is built
-- THEN every package is installed via `pip3 install --break-system-packages`
+#### Scenario: Locked Python environment is installed
+- **WHEN** the Docker image is built from an unchanged `requirements.txt`
+- **THEN** the same direct dependency versions are installed into `/opt/nita-venv` and `pip check` succeeds
+
+#### Scenario: Helper uses the virtual environment
+- **WHEN** a Jenkins job invokes a packaged Python helper
+- **THEN** its interpreter and imports resolve from `/opt/nita-venv` without system-wide pip installation
 
 ### Requirement: Network automation libraries available
 The system SHALL install `ansible`, `ncclient`, `junos-eznc`, `python-jenkins`, and `jenkinsapi` so Jenkins pipeline scripts can drive network device automation.
