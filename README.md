@@ -1,12 +1,13 @@
-[branch]: https://github.com/Juniper/nita/tree/23.12
-[readme]: https://github.com/Juniper/nita/blob/23.12/README.md
+[branch]: https://github.com/Juniper/nita/tree/26.10
+[readme]: https://github.com/Juniper/nita/blob/26.10/README.md
 
-# NITA Jenkins 23.12
+# NITA Jenkins 26.10
 
 Welcome to NITA, an open source platform for automating the building and testing of complex networks.
 
 # Release Notes
-The major change in this version is that all components now run within pods under the control of Kubernetes, rather than as Docker containers. Consequently we have updated the way that Ansible runs because it is now controlled by Kubernetes instead of Docker. 
+
+The major change in this version is that the jenkins interface is now accessible from the webapp subdomain.
 
 Please refer to the [README][readme] for more details.
 
