@@ -39,7 +39,9 @@ ENV JENKINS_PASS=admin
 ENV PATH="/opt/nita-venv/bin:$PATH"
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-COPY basic-security.groovy /var/jenkins_home/init.groovy.d/
+# Seeded via /usr/share/jenkins/ref; the .override suffix makes the entrypoint
+# re-copy it on every start so pre-existing jenkins_home volumes pick up changes.
+COPY basic-security.groovy /usr/share/jenkins/ref/init.groovy.d/basic-security.groovy.override
 COPY write_yaml_files.py robot.py create_ansible_job_k8s.py /usr/local/bin/
 COPY --from=python-builder /opt/nita-venv /opt/nita-venv
 
@@ -50,7 +52,7 @@ USER root
 RUN chmod 755 /usr/local/bin/write_yaml_files.py \
               /usr/local/bin/robot.py \
               /usr/local/bin/create_ansible_job_k8s.py \
- && chown -R jenkins:jenkins /var/jenkins_home/init.groovy.d/ \
+ && chown -R jenkins:jenkins /usr/share/jenkins/ref/init.groovy.d/ \
  && apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
  && DEBIAN_FRONTEND=noninteractive apt-get purge -y git-lfs \
