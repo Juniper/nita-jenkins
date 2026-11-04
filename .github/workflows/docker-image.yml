@@ -94,8 +94,13 @@ jobs:
           test "$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")" = "healthy"
           docker exec "${container_name}" curl --fail --silent --show-error \
             http://localhost:8080/jenkins/login --output /dev/null
+          # Reverse-proxy realm: identity comes from X-Forwarded-User; anonymous has no Overall/Read.
           docker exec "${container_name}" curl --fail --silent --show-error \
-            --user admin:admin http://localhost:8080/jenkins/api/json --output /dev/null
+            --header 'X-Forwarded-User: admin' \
+            http://localhost:8080/jenkins/api/json --output /dev/null
+          anon_status="$(docker exec "${container_name}" curl --silent --output /dev/null \
+            --write-out '%{http_code}' http://localhost:8080/jenkins/api/json)"
+          test "${anon_status}" = "403"
           if docker logs "${container_name}" 2>&1 | grep --quiet 'Failed to run script'; then
             docker logs "${container_name}"
             exit 1
@@ -237,8 +242,13 @@ jobs:
           test "$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")" = "healthy"
           docker exec "${container_name}" curl --fail --silent --show-error \
             http://localhost:8080/jenkins/login --output /dev/null
+          # Reverse-proxy realm: identity comes from X-Forwarded-User; anonymous has no Overall/Read.
           docker exec "${container_name}" curl --fail --silent --show-error \
-            --user admin:admin http://localhost:8080/jenkins/api/json --output /dev/null
+            --header 'X-Forwarded-User: admin' \
+            http://localhost:8080/jenkins/api/json --output /dev/null
+          anon_status="$(docker exec "${container_name}" curl --silent --output /dev/null \
+            --write-out '%{http_code}' http://localhost:8080/jenkins/api/json)"
+          test "${anon_status}" = "403"
           if docker logs "${container_name}" 2>&1 | grep --quiet 'Failed to run script'; then
             docker logs "${container_name}"
             exit 1
