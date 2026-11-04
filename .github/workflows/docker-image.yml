@@ -45,6 +45,8 @@ jobs:
           load: true
           tags: ${{ env.TEST_IMAGE }}
           labels: org.opencontainers.image.source=https://github.com/Juniper/nita-jenkins
+          # Transitive pip deps are unpinned; a cached venv layer silently keeps old CVEs.
+          no-cache-filters: python-builder
           cache-from: type=gha,scope=validate-${{ matrix.architecture }}
           cache-to: type=gha,mode=max,scope=validate-${{ matrix.architecture }}
 
@@ -188,6 +190,7 @@ jobs:
           outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           sbom: true
           provenance: mode=max
+          no-cache-filters: python-builder
           cache-from: type=gha,scope=publish-${{ matrix.architecture }}
           cache-to: type=gha,mode=max,scope=publish-${{ matrix.architecture }}
 
