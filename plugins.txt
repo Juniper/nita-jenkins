@@ -1,3 +1,6 @@
 robot:6.2.1
 ansicolor:536.v13fa_b_860c267
 matrix-auth:3.3
+reverse-proxy-auth-plugin:257.v7dc0e405b_624
+cloudbees-folder:6.1100.ve9eed61d16c4
+credentials:1447.v4cb_b_539b_5321

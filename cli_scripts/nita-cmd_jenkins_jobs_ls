@@ -18,7 +18,9 @@
 if [ -x "$(command -v kubectl)" ]; then
 
     export POD=$(kubectl get pods -n nita --no-headers=true -l io.kompose.service=jenkins | grep Running | awk '{print $1}')
-    CMD="kubectl exec -it $POD -n nita -- /bin/bash -c 'java -jar /var/jenkins_home/war/WEB-INF/jenkins-cli.jar -noCertificateCheck -s https://admin:admin@jenkins:8443/jenkins/ list-jobs '"
+    # Jenkins trusts X-Forwarded-User from inside the pod; list job names via the REST API.
+    REMOTE='curl --silent --show-error --fail -H "X-Forwarded-User: ${JENKINS_USER:-admin}" "http://localhost:8080/jenkins/api/json?tree=jobs%5Bname%5D" | python3 -c "import json,sys; print(chr(10).join(j[sys.argv[1]] for j in json.load(sys.stdin)[sys.argv[2]]))" name jobs'
+    CMD="kubectl exec -i $POD -n nita -- /bin/bash -c '${REMOTE}'"
 
 elif [ -x "$(command -v docker)" ]; then
 

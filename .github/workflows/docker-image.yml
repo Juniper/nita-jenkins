@@ -45,6 +45,8 @@ jobs:
           load: true
           tags: ${{ env.TEST_IMAGE }}
           labels: org.opencontainers.image.source=https://github.com/Juniper/nita-jenkins
+          # Transitive pip deps are unpinned; a cached venv layer silently keeps old CVEs.
+          no-cache-filters: python-builder
           cache-from: type=gha,scope=validate-${{ matrix.architecture }}
           cache-to: type=gha,mode=max,scope=validate-${{ matrix.architecture }}
 
@@ -94,8 +96,13 @@ jobs:
           test "$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")" = "healthy"
           docker exec "${container_name}" curl --fail --silent --show-error \
             http://localhost:8080/jenkins/login --output /dev/null
+          # Reverse-proxy realm: identity comes from X-Forwarded-User; anonymous has no Overall/Read.
           docker exec "${container_name}" curl --fail --silent --show-error \
-            --user admin:admin http://localhost:8080/jenkins/api/json --output /dev/null
+            --header 'X-Forwarded-User: admin' \
+            http://localhost:8080/jenkins/api/json --output /dev/null
+          anon_status="$(docker exec "${container_name}" curl --silent --output /dev/null \
+            --write-out '%{http_code}' http://localhost:8080/jenkins/api/json)"
+          test "${anon_status}" = "403"
           if docker logs "${container_name}" 2>&1 | grep --quiet 'Failed to run script'; then
             docker logs "${container_name}"
             exit 1
@@ -183,6 +190,7 @@ jobs:
           outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           sbom: true
           provenance: mode=max
+          no-cache-filters: python-builder
           cache-from: type=gha,scope=publish-${{ matrix.architecture }}
           cache-to: type=gha,mode=max,scope=publish-${{ matrix.architecture }}
 
@@ -237,8 +245,13 @@ jobs:
           test "$(docker inspect --format '{{.State.Health.Status}}' "${container_name}")" = "healthy"
           docker exec "${container_name}" curl --fail --silent --show-error \
             http://localhost:8080/jenkins/login --output /dev/null
+          # Reverse-proxy realm: identity comes from X-Forwarded-User; anonymous has no Overall/Read.
           docker exec "${container_name}" curl --fail --silent --show-error \
-            --user admin:admin http://localhost:8080/jenkins/api/json --output /dev/null
+            --header 'X-Forwarded-User: admin' \
+            http://localhost:8080/jenkins/api/json --output /dev/null
+          anon_status="$(docker exec "${container_name}" curl --silent --output /dev/null \
+            --write-out '%{http_code}' http://localhost:8080/jenkins/api/json)"
+          test "${anon_status}" = "403"
           if docker logs "${container_name}" 2>&1 | grep --quiet 'Failed to run script'; then
             docker logs "${container_name}"
             exit 1

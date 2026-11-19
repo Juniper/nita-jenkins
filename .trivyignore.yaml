@@ -7,7 +7,7 @@ vulnerabilities:
       during re-keying; NITA connects only to operator-selected lab systems.
       NITA maintainers own this exception under
       https://github.com/Juniper/nita/issues/75 pending a Debian stable fix.
-    expired_at: 2026-11-03
+    expired_at: 2026-12-15
   - id: CVE-2026-6653
     purls:
       - pkg:deb/debian/libxml2
@@ -16,4 +16,4 @@ vulnerabilities:
       from operator-selected lab devices and repositories. NITA maintainers own
       this exception under https://github.com/Juniper/nita/issues/75 pending a
       Debian stable fix.
-    expired_at: 2026-11-03
+    expired_at: 2026-12-15
